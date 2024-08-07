@@ -1,6 +1,6 @@
 # Secure and Transparent Supply Chain Management with Predictive Analytics
 
-|                                            Project Timeline                                                                                             |
+|                            |          Project Timeline             |                                                                                    |
 |----------------------------|---------------------------------------|------------------------------------------------------------------------------------|
 | Dates                      | Phase                                 | Tasks                                                                              |
 | August 6 - August 15       | Research, Design, and Data Collection | -        Define problem statement.                                                 |
