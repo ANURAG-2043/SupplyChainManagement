@@ -1,0 +1,16 @@
+numpy
+pandas
+scipy
+matplotlib
+nbformat
+statsmodels
+plotly
+seaborn
+scikit-learn
+nltk
+datetime
+pickle
+ortools
+prophet
+glob
+os 
