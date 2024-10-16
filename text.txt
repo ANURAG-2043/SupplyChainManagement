@@ -1,0 +1,18 @@
+// set up sqwl lite for storing the user info
+// check app.py
+and routes.py 
+// get configurations for jwt token. add it in app.py
+//gpt -- abc.20.23@gmail.com
+
+
+
+6th //js ka code change karna hai
+
+
+done 
+//1st
+//2nd
+//3rd a,b
+//4th a,b
+//5th 
+//
