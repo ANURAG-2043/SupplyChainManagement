@@ -1,1 +1,125 @@
-/* style to index.html */
+:root {
+    --input-focus: #2d8cf0; /* Focus color for inputs */
+    --font-color: #323232; /* Main font color */
+    --font-color-sub: #666; /* Secondary font color */
+    --bg-color: #fff; /* Background color for inputs */
+    --main-color: #323232; /* Main color for borders and buttons */
+    --container-bg: #f9f9f9; /* Background color for the body */
+    --form-bg: #e6f0ff; /* Background color for the form container */
+    --form-shadow: rgba(0, 0, 0, 0.1); /* Shadow for the form container */
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    background-color: var(--container-bg); /* Background color for the body */
+    font-family: Arial, sans-serif; /* Default font */
+  }
+  
+  h1 {
+    color: var(--font-color);
+    text-align: center; /* Center-align the heading */
+    margin-bottom: 40px; /* Space below the heading */
+    font-size: 24px; /* Increase font size for the heading */
+  }
+  
+  .form-container {
+    background-color: var(--form-bg); /* Background color for the form container */
+    padding: 30px; /* Padding inside the container */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px var(--form-shadow); /* Shadow for depth */
+    max-width: 400px; /* Maximum width of the container */
+    width: 90%; /* Full width for smaller screens */
+  }
+  
+  .form-toggle {
+    display: flex;
+    justify-content: space-between; /* Space between buttons */
+    margin-bottom: 20px; /* Space below toggle buttons */
+  }
+  
+  .form-toggle button {
+    flex: 1; /* Equal width for buttons */
+    margin: 0 5px; /* Space between buttons */
+    padding: 10px; /* Padding for buttons */
+    border: none; /* Remove border */
+    background-color: var(--main-color); /* Button background */
+    color: white; /* Button text color */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth transition */
+  }
+  
+  .form-toggle button.active {
+    background-color: var(--input-focus); /* Highlighted background for active button */
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column; /* Stack inputs vertically */
+  }
+  
+  input {
+    width: 100%; /* Full width of the form */
+    height: 40px; /* Input height */
+    border-radius: 5px; /* Rounded corners for inputs */
+    border: 2px solid var(--main-color); /* Border color */
+    background-color: var(--bg-color); /* Input background color */
+    padding: 5px 10px; /* Padding inside inputs */
+    margin-top: 16px; /* Space above each input */
+    font-size: 15px; /* Font size for input */
+    font-weight: 600; /* Font weight for input text */
+    color: var(--font-color); /* Font color for input text */
+    outline: none; /* Remove outline on focus */
+    transition: border-color 0.3s; /* Smooth transition for border color */
+  }
+  
+  input::placeholder {
+    color: var(--font-color-sub); /* Placeholder color */
+    opacity: 0.8; /* Slight transparency for placeholders */
+  }
+  
+  input:focus {
+    border: 2px solid var(--input-focus); /* Border color on focus */
+  }
+  
+  button[type="submit"] {
+    margin-top: 20px; /* Space above the button */
+    width: 100%; /* Full width for the button */
+    height: 40px; /* Button height */
+    border-radius: 5px; /* Rounded corners for button */
+    border: 2px solid var(--main-color); /* Border color */
+    background-color: var(--input-focus); /* Background color */
+    color: white; /* Text color */
+    font-size: 17px; /* Font size for button */
+    font-weight: bold; /* Font weight for button text */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s, transform 0.1s; /* Smooth transition */
+  }
+  
+  button[type="submit"]:hover {
+    background-color: var(--main-color); /* Change background color on hover */
+  }
+  
+  button[type="submit"]:active {
+    transform: translateY(2px); /* Slight press effect on click */
+  }
+  
+  .register-link {
+    text-align: center;
+    margin-top: 20px; /* Space above the link */
+  }
+  
+  .register-link a {
+    color: var(--input-focus); /* Color for the link */
+    text-decoration: none; /* Remove underline */
+  }
+  
+  .register-link a:hover {
+    text-decoration: underline; /* Underline on hover */
+  }
+  
