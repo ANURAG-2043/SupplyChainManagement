@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta httpequiv="XUACompatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        /* Navbar styles */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            background-color: #333;
+            padding: 10px;
+            color: #fff;
+        }
+        .navbar h1 {
+            margin: 0;
+        }
+        .navbar button {
+            background-color: #f44336;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            color: white;
+            border-radius: 5px;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            width: 400px;
+            background-color: #333;
+            color: #fff;
+            height: calc(100vh - 60px); /* Adjust height to be the full view minus the navbar */
+            padding: 15px;
+            position: fixed;
+            top: 80px; /* Position it right below the navbar */
+            left: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .sidebar a {
+            color: #ddd;
+            text-decoration: none;
+            padding: 15px; /* Increased padding for more space */
+            font-size: 18px; 
+            border-radius: 5px;
+        }
+        .sidebar a:hover {
+            background-color: #575757;
+        }
+
+        /* Content section styles */
+        .content {
+            margin-left: 420px;
+            padding: 20px;
+        }
+        .content h2 {
+            margin-bottom: 5px;
+        }
+        .content .button-grid {
+            
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .content .button-grid button {
+            width: 100%;
+            height: 250px;
+            background-color: #008cba;
+            color: white;
+            font-size: 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .content .button-grid button:hover {
+            background-color: #005f7f;
+        }
+    </style>
+</head>
+    <body>
+        <!-- Navbar -->
+        <div class="navbar">
+            <h1>Supply Chain Management</h1>
+            <p>You are successfully authenticated as {{ user }}!</p>
+            <button id="logout-button">Logout</button>
+        </div>
+    
+        <div class="sidebar">
+            <a href="/dashboard/overview">Overview</a>
+            <a href="/dashboard/inventory">Inventory Management</a>
+            <a href="/dashboard/orders">Orders</a>
+            <a href="/dashboard/reports">Reports</a>
+            <a href="/dashboard/analytics">Analytics</a>
+            <a href="/dashboard/visualization">Visualization</a>
+        </div>
+    
+        <!-- Content Section -->
+        <div class="content">
+            <h2>Dashboard</h2>
+            <div class="button-grid">
+                <button onclick="window.location.href='/dashboard/overview'">Overview</button>
+                <button onclick="window.location.href='/dashboard/inventory'">Inventory Management</button>
+                <button onclick="window.location.href='/dashboard/orders'">Orders</button>
+                <button onclick="window.location.href='/dashboard/reports'">Reports</button>
+                <button onclick="window.location.href='/dashboard/analytics'">Analytics</button>
+                <button onclick="window.location.href='/dashboard/visualization'">Visualization</button>
+            </div>
+        </div>
+    
+        <script src="{{ url_for('static', filename='scripts/app.js') }}"></script>
+    </body>
+    </html>

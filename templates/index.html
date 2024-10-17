@@ -2,16 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SupplyChainManagement</title>
+    <title>Login</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/forms.css') }}">
-
 </head>
 <body>
-    <!-- add the login form here-->
-    {% include 'login.html' %}
-    <script type="text/javascript" src="{{ url_for('static', filename='scripts/forms.js') }}"></script>
+    <h1>Welcome to Supply Chain Management</h1>
+    
+    <!-- Container for the form -->
+    <div class="form-container">
+        <form id="login-form">
+            <input type="email" name="email" placeholder="Email" >
+            <input type="password" name="password" placeholder="Password">
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <script src="{{ url_for('static', filename='scripts/auth.js') }}"></script>
 </body>
 </html>
