@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="D:\my-project\static\styles.css">
+    <style>
+        #loading {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Admin Dashboard</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="#transactions">Transactions</a></li>
+                <li class="nav-item"><a class="nav-link" href="#sales">Sales</a></li>
+                <li class="nav-item"><a class="nav-link" href="#notifications">Notifications</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div id="loading">Loading...</div>
+
+    <div class="container mt-4" id="content">
+        <section id="transactions">
+            <h2>Transaction Records</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>SKU</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Timestamp</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                    <tr>
+                        <td>{{ transaction.id }}</td>
+                        <td>{{ transaction.sku }}</td>
+                        <td>{{ transaction.from }}</td>
+                        <td>{{ transaction.to }}</td>
+                        <td>{{ transaction.timestamp }}</td>
+                        <td>{{ transaction.details }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section id="sales">
+            <h2>Sales Records</h2>
+            <div id="sales-graph"></div>
+            <script>
+                var salesData = {{ sales | tojson | safe }};
+                var salesDates = salesData.map(sale => sale.timestamp);
+                var salesRevenue = salesData.map(sale => sale.revenue);
+                
+                var plotData = {
+                    x: salesDates,
+                    y: salesRevenue,
+                    type: 'scatter'
+                };
+        
+                Plotly.newPlot('sales-graph', [plotData]);
+            </script>
+        </section>
+        
+        <section id="notifications">
+            <h2>Notifications</h2>
+            {% for notification in notifications %}
+                <div class="alert alert-warning">{{ notification.message }}</div>
+            {% endfor %}
+        </section>
+    </div>
+
+    <script>
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+        
+        socket.on('huge_sale_notification', function(data) {
+            // Create a notification instead of an alert
+            var notificationDiv = document.createElement('div');
+            notificationDiv.className = 'alert alert-success';
+            notificationDiv.innerText = data.message;
+            document.getElementById('notifications').prepend(notificationDiv);
+        });
+
+        // Show loading indicator
+        document.getElementById('loading').style.display = 'block';
+        socket.on('connect', function() {
+            document.getElementById('loading').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
