@@ -5,19 +5,157 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            max-width: 400px;
+        }
+
+        .form-container form {
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
+        
+        .form-container form.active {
+            display: flex;
+        }
+        
+        .form-container button {
+            padding: 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .form-container button:hover {
+            background-color: #218838;
+        }
+
+        .form-container input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .form-container input:focus {
+            border-color: #28a745;
+            outline: none;
+        }
+        
+        .toggle-button {
+            margin: 10px 5px;
+            padding: 10px 20px;
+            background-color: #f4f4f9;
+            border: 1px solid #28a745;
+            color: #28a745;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .toggle-button:hover {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        
+        .form-container button {
+            /* Other button styles remain unchanged */
+            margin: auto 50px; /* Optional: Add horizontal margin between buttons */
+
+        #con {
+            border-radius: 10px; 
+            background-color: #f9f9f9; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            padding: 20px;  
+            margin: 20px; 
+        }
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to Supply Chain Management</h1>
     
-    <!-- Container for the form -->
     <div class="form-container">
-        <form id="login-form">
-            <input type="email" name="email" placeholder="Email" >
-            <input type="password" name="password" placeholder="Password">
-            <button type="submit">Login</button>
+        <h1>Welcome to Supply Chain Management</h1>
+        <div id="con">
+        <div class="button-container">
+            <button id="login-btn" onclick="toggleForm('login')">Login</button>
+            <button id="register-btn" onclick="toggleForm('register')">Register</button>
+        </div>
+        
+        <form id="login-form" class="active" onsubmit="login(); return false;">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <div class="button-container">
+                <button type="submit">Login</button>
+            </div>
         </form>
+        
+        <form id="register-form" onsubmit="register(); return false;">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <div class="button-container">
+                <button type="submit">Register</button>
+            </div>
+        </form>
+    </div>
     </div>
 
     <script src="{{ url_for('static', filename='scripts/auth.js') }}"></script>
+    <script>
+        function toggleForm(form) {
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            
+            if (form === 'login') {
+                loginForm.classList.add('active');
+                registerForm.classList.remove('active');
+            } else {
+                loginForm.classList.remove('active');
+                registerForm.classList.add('active');
+            }
+        }
+
+        function login() {
+            alert("Logged in successfully");
+        }
+
+        function register() {
+            alert("Registered successfully");
+        }
+    </script>
 </body>
 </html>

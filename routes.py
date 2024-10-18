@@ -8,10 +8,6 @@ from flask_jwt_extended import  create_refresh_token, create_access_token, jwt_r
 dashboard_bp = Blueprint('dashboard', __name__)
 
 
-@dashboard_bp.route('/overview')
-def overview():
-    return render_template('overview.html')
-
 @dashboard_bp.route('/orders')
 def orders():
     return render_template('orders.html')
