@@ -15,3 +15,7 @@ def login():
     if data['email'] == mock_user['email'] and data['password'] == mock_user['password']:
         return jsonify(access_token='e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'),200  # Replace with actual token generation logic
     return jsonify(msg="Bad email or password"), 401
+
+@auth_bp.route('/logout', methods=['POST'])
+def logout():
+    return jsonify(message="Successfully logged out"), 200
