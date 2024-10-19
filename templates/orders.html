@@ -1,34 +1,129 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <style>
+      
         body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background-color: #f0f0f0;
             font-family: Arial, sans-serif;
         }
-        h1 {
-            color: #333;
-            font-size: 48px;
+
+       
+        nav {
+            margin-bottom: 20px;
         }
-        p {
-            font-size: 24px;
-            color: #666;
+
+        .navbar {
+            background-color: #f8f9fa; /* Light background for navbar */
+        }
+
+      
+        .container {
+            margin-top: 20px;
+        }
+
+        #loading {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+        }
+
+       
+        .table {
+            width: 100%; /* Full width for tables */
+            border-collapse: collapse; /* No space between borders */
+        }
+
+        .table th, .table td {
+            padding: 12px; /* Padding for table cells */
+            text-align: left; /* Align text to the left */
+            border: 1px solid #dee2e6; /* Light border */
+        }
+
+        .table th {
+            background-color: #f2f2f2; /* Light grey for header */
+        }
+
+       
+        .alert {
+            margin-top: 10px; /* Space above notifications */
+        }
+
+       
+        #sales-graph {
+            margin-top: 20px; /* Space above the graph */
+            width: 100%; /* Full width for the graph */
+            height: 400px; /* Set a height for the graph */
         }
     </style>
 </head>
 <body>
-    <h1>Hello, Welcome! Orders</h1>
-    <p>We are glad to have you here.</p>
-    <button onclick="window.location.href='/'">Go to Home</button>
+   <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/dashboard/orders">Orders Dashboard</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="/orders/transactions">Transactions</a></li>
+                <li class="nav-item"><a class="nav-link" href="/orders/sales">Sales</a></li>
+              <!--  <li class="nav-item"><a class="nav-link" href="/orders/notifications">Notifications</a></li> -->
+                <li class="nav-item"><a class="nav-link" href="/dashboard"> Back to Dashboard</a></li>
+            </ul>
+        </div>
+    </nav>
+
+  <div id="loading">Loading...</div>
+
+    <div class="container mt-4" id="content">
+        <section id="transactions">
+            <h2>Transaction Records</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>SKU</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Timestamp</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+               <tbody>
+                    {% for transaction in transactions %}
+                    <tr>
+                        <td>{{ transaction.id }}</td>
+                        <td>{{ transaction.sku }}</td>
+                        <td>{{ transaction.from }}</td>
+                        <td>{{ transaction.to }}</td>
+                        <td>{{ transaction.timestamp }}</td>
+                        <td>{{ transaction.details }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section id="sales">
+            <h2>Sales Records</h2>
+            <div id="sales-graph"></div>
+            <script>
+               
+            </script>
+        </section>
+        
+        <section id="notifications">
+           <h2>Notifications</h2>
+            {% for notification in notifications %}
+                <div class="alert alert-warning">{{ notification.message }}</div>
+            {% endfor %} 
+        </section>
+    </div>
 </body>
 </html>

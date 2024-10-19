@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Data</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: #333;
+            font-size: 48px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sales Data</h1>
+    
+    <!-- Table to display sales data -->
+    <table>
+        <thead>
+            <tr>
+                <th>SKU</th>
+                <th>Amount</th>
+                <th>Revenue</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sale in sales %}
+            <tr>
+                <td>{{ sale.sku }}</td>
+                <td>{{ sale.amount }}</td>
+                <td>{{ sale.revenue }}</td>
+                <td>{{ sale.timestamp }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <button onclick="window.location.href='/dashboard/orders'">Go to Orders</button>
+</body>
+</html>
