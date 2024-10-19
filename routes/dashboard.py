@@ -7,15 +7,10 @@ dashboard_bp = Blueprint('dashboard', __name__)
 def dashboard_home():
     return render_template('dashboard.html')
 
-# # Route to render the overview page
-# @dashboard_bp.route('/overview')
-# def overview():
-#     return render_template('dashboard.html')
-
 # Route to render the orders page
-@dashboard_bp.route('/orders')
-def order_page():
-    return render_template('orders.html')
+# @dashboard_bp.route('/orders')
+# def order_page():
+#     return render_template('orders.html')
 
 # Route to render the inventory page
 @dashboard_bp.route('/inventory')
