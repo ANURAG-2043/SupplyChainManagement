@@ -1,13 +1,18 @@
-from flask import Blueprint, Flask, render_template, jsonify
+from flask import Blueprint, Flask, render_template, jsonify, request
+from sklearn.discriminant_analysis import StandardScaler
 from routes.dashboard import dashboard_bp
-# from routes.
 from flask_socketio import SocketIO
 from web3 import Web3
 import pandas as pd
+import pickle
+import numpy as np
+from sklearn.metrics import r2_score, mean_absolute_error
 import os
 
 app = Flask(__name__)
 socketio = SocketIO(app)
+
+scaler = StandardScaler()
 
  # Register blueprints
 app.register_blueprint(dashboard_bp, url_prefix='/dashboard')
@@ -235,10 +240,73 @@ contract = w3.eth.contract(address=contract_address, abi=contract_abi)
 csv_file_path = os.getenv('CSV_FILE_PATH')
 products_data = pd.read_csv('/Users/dailyAnurag/Desktop/colab_prj/SupplyChainManagement/data/sample/supply_chain_data_processed_1.csv')
 
+#transportation model integration:
+transportation_model_path = r'/Users/dailyAnurag/Desktop/colab_prj/SupplyChainManagement/ml/models/Transportation_cost_model.h5'
+with open(transportation_model_path, 'rb') as f:
+    model_transportation = pickle.load(f)
+
+#stock model integration
+stock_model_path = r'/Users/dailyAnurag/Desktop/colab_prj/SupplyChainManagement/ml/models/Stock_level_model.h5'
+with open(stock_model_path, 'rb') as f:
+    model_stock = pickle.load(f)
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
+@app.route('/dashboard/transportation', methods=['GET'])
+def transportation_page():
+    return render_template('transportation.html')
+
+@app.route('/dashboard/transportation/predict', methods=['POST'])
+def predict():
+    # Get input from the form
+    data = request.json
+    sku = int(data['SKU'])
+    lead_times = int(data['Lead times'])
+    order_quantities = int(data['Order quantities'])
+    shipping_carriers = data['Shipping carriers']
+    location = data['Location']
+    routes = data['Routes']
+    defect_rates = float(data['Defect rates'])
+    transportation_modes = data['Transportation modes']
+    supplier_name = data['Supplier name']
+    shipping_times = int(data['Shipping times'])
+    inspection_results = data['Inspection results']
+    input_data = np.array([[sku, lead_times, order_quantities, shipping_carriers, location, routes,
+                            defect_rates, transportation_modes, supplier_name, shipping_times, inspection_results]])
+    input_data_scaled = scaler.transform(input_data)
+    prediction = model_transportation.predict(input_data_scaled)
+    return jsonify({'prediction': float(prediction[0][0])})
+
+
+@app.route('/dashboard/inventory', methods=['GET', 'POST'])
+def show_results():
+    prediction = None
+    if request.method == 'POST':
+        sku = float(request.form['SKU'])
+        price = float(request.form['Price'])
+        revenue = float(request.form['Revenue generated'])
+        lead_times = int(request.form['Lead times'])
+        shipping_times = int(request.form['Shipping times'])
+        shipping_costs = float(request.form['Shipping costs'])
+        lead_time = int(request.form['Lead time'])
+        production_volumes = int(request.form['Production volumes'])
+        manufacturing_lead_time = int(request.form['Manufacturing lead time'])
+        manufacturing_costs = float(request.form['Manufacturing costs'])
+        inspection_results = int(request.form['Inspection results'])
+        defect_rates = float(request.form['Defect rates'])
+        routes = request.form['Routes']
+        costs = float(request.form['Costs'])
+        input_data = np.array([[sku, price, revenue, lead_times, shipping_times,
+                                shipping_costs, lead_time, production_volumes,
+                                manufacturing_lead_time, manufacturing_costs,
+                                inspection_results, defect_rates, routes, costs]])
+        input_data_scaled = scaler.transform(input_data)
+        prediction = model_stock.predict(input_data_scaled)[0][0]
+    return render_template('index.html', prediction=prediction)
+    
+    
 @app.route('/dashboard/orders')
 def orders():
     transactions = get_all_transactions()

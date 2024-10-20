@@ -18,9 +18,9 @@ def inventory_page():
     return render_template('inventory.html')
 
 # Route to render the reports page
-@dashboard_bp.route('/reports')
+@dashboard_bp.route('/transportation')
 def reports_page():
-    return render_template('reports.html')
+    return render_template('transportation.html')
 
 # Route to render the analytics page
 @dashboard_bp.route('/analytics')
