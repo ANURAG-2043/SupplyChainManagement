@@ -1,9 +1,11 @@
-from flask import Blueprint, Flask, render_template, jsonify
+from flask import Blueprint, Flask, render_template, jsonify, request
 from routes.dashboard import dashboard_bp
-# from routes.
 from flask_socketio import SocketIO
 from web3 import Web3
 import pandas as pd
+import pickle
+import numpy as np
+from sklearn.preprocessing import StandardScaler
 import os
 
 app = Flask(__name__)
@@ -235,9 +237,41 @@ contract = w3.eth.contract(address=contract_address, abi=contract_abi)
 csv_file_path = os.getenv('CSV_FILE_PATH')
 products_data = pd.read_csv('/Users/dailyAnurag/Desktop/colab_prj/SupplyChainManagement/data/sample/supply_chain_data_processed_1.csv')
 
+#transportation model integration:
+model_path = r'/Users/dailyAnurag/Desktop/colab_prj/SupplyChainManagement/ml/models/Transportation_cost_model.h5'
+with open(model_path, 'rb') as f:
+    model = pickle.load(f)
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/dashboard/transportation', methods=['GET'])
+def transportation_page():
+    return render_template('transportation.html')
+
+@app.route('/dashboard/transportation/predict', methods=['POST'])
+def predict():
+    # Get input from the form
+    data = request.json
+    sku = int(data['SKU'])
+    lead_times = int(data['Lead times'])
+    order_quantities = int(data['Order quantities'])
+    shipping_carriers = data['Shipping carriers']
+    location = data['Location']
+    routes = data['Routes']
+    defect_rates = float(data['Defect rates'])
+    transportation_modes = data['Transportation modes']
+    supplier_name = data['Supplier name']
+    shipping_times = int(data['Shipping times'])
+    inspection_results = data['Inspection results']
+    input_data = np.array([[sku, lead_times, order_quantities, shipping_carriers, location, routes,
+                            defect_rates, transportation_modes, supplier_name, shipping_times, inspection_results]])
+    input_data_scaled = scaler.transform(input_data)
+    prediction = model.predict(input_data_scaled)
+    return jsonify({'prediction': float(prediction[0][0])})
+
 
 @app.route('/dashboard/orders')
 def orders():

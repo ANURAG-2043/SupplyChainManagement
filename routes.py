@@ -11,9 +11,9 @@ dashboard_bp = Blueprint('dashboard', __name__)
 def inventory():
     return render_template('inventory.html')
 
-@dashboard_bp.route('/reports')
-def reports():
-    return render_template('reports.html')
+# @dashboard_bp.route('/transportation')
+# def reports():
+#     return render_template('transportation.html')
 
 @dashboard_bp.route('/analytics')
 def analytics():
