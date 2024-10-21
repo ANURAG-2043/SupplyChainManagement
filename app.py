@@ -6,13 +6,14 @@ from web3 import Web3
 import pandas as pd
 import pickle
 import numpy as np
-from sklearn.metrics import r2_score, mean_absolute_error
+from werkzeug.utils import secure_filename
 import os
 
 app = Flask(__name__)
 socketio = SocketIO(app)
 
 scaler = StandardScaler()
+# sentiment_analyzer = SentimentAnalyzer()
 
  # Register blueprints
 app.register_blueprint(dashboard_bp, url_prefix='/dashboard')
@@ -249,10 +250,18 @@ with open(transportation_model_path, 'rb') as f:
 stock_model_path = r'/Users/dailyAnurag/Desktop/colab_prj/SupplyChainManagement/ml/models/Stock_level_model.h5'
 with open(stock_model_path, 'rb') as f:
     model_stock = pickle.load(f)
+    
+revenue_model_path = r'/Users/dailyAnurag/Desktop/colab_prj/SupplyChainManagement/ml/models/Revenue_Generation_model.h5'
+with open(revenue_model_path, 'rb') as file:
+    model_revenue = pickle.load(file)
 
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/dashboard')
+def dashboard_home():
+    return render_template('dashboard.html')
 
 @app.route('/dashboard/transportation', methods=['GET'])
 def transportation_page():
@@ -260,7 +269,6 @@ def transportation_page():
 
 @app.route('/dashboard/transportation/predict', methods=['POST'])
 def predict():
-    # Get input from the form
     data = request.json
     sku = int(data['SKU'])
     lead_times = int(data['Lead times'])
@@ -280,7 +288,7 @@ def predict():
     return jsonify({'prediction': float(prediction[0][0])})
 
 
-@app.route('/dashboard/inventory', methods=['GET', 'POST'])
+@app.route('/dashboard/stock_level', methods=['GET', 'POST'])
 def show_results():
     prediction = None
     if request.method == 'POST':
@@ -304,8 +312,39 @@ def show_results():
                                 inspection_results, defect_rates, routes, costs]])
         input_data_scaled = scaler.transform(input_data)
         prediction = model_stock.predict(input_data_scaled)[0][0]
-    return render_template('index.html', prediction=prediction)
+    return render_template('stockLevel.html', prediction=prediction)
     
+@app.route('/dashboard/revenue')
+def predict_revenue():
+    prediction = None
+    if request.method == 'POST':
+        try:
+            sku = float(request.form['SKU'])
+            price = float(request.form['Price'])
+            revenue = float(request.form['Revenue generated'])
+            lead_times = int(request.form['Lead times'])
+            shipping_times = int(request.form['Shipping times'])
+            shipping_costs = float(request.form['Shipping costs'])
+            lead_time = int(request.form['Lead time'])
+            production_volumes = int(request.form['Production volumes'])
+            manufacturing_lead_time = int(request.form['Manufacturing lead time'])
+            manufacturing_costs = float(request.form['Manufacturing costs'])
+            inspection_results = int(request.form['Inspection results'])
+            defect_rates = float(request.form['Defect rates'])
+            routes = float(request.form['Routes'])
+            costs = float(request.form['Costs'])
+            input_data = np.array([[sku, price, revenue, lead_times, shipping_times,
+                                    shipping_costs, lead_time, production_volumes,
+                                    manufacturing_lead_time, manufacturing_costs,
+                                    inspection_results, defect_rates, routes, costs]])
+            input_data_scaled = scaler.transform(input_data)
+            prediction = model_revenue.predict(input_data_scaled)[0][0]
+
+        except Exception as e:
+            print(f"Error: {e}")
+            prediction = "Invalid Input Data"
+
+    return render_template('revenue.html', prediction=prediction)
     
 @app.route('/dashboard/orders')
 def orders():
@@ -330,6 +369,38 @@ def get_sales():
         return render_template('sales.html', sales = sales)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+    
+#NLP model integration:
+
+# @app.route('/dashboard/product_review', methods=['POST'])
+# def upload_file():
+#     if 'file' not in request.files:
+#         return render_template('error.html', error='No file uploaded')
+    
+#     file = request.files['file']
+#     if file.filename == '':
+#         return render_template('error.html', error='No selected file')
+
+#     try:
+#         reviews = sentiment_analyzer.process_file(file)
+#         sentiment_counts, positive_reviews, negative_reviews = sentiment_analyzer.analyze_reviews(reviews)
+        
+#         sentiment_plot = sentiment_analyzer.plot_sentiment_distribution(sentiment_counts)
+
+#         plot_json = sentiment_plot.to_json()
+#         return render_template(
+#             'productReview.html',
+#             sentiment_counts=sentiment_counts.to_dict(),
+#             positive_reviews=positive_reviews[:2],  
+#             negative_reviews=negative_reviews[:2],  
+#             plot_json=plot_json
+#         )
+       
+#     except ValueError as e:
+#         return jsonify({'error': str(e)}), 400
+    
+    
 
 # Fetch all transactions from the blockchain
 def fetch_transactions_from_blockchain():

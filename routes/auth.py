@@ -3,7 +3,6 @@ from flask import Blueprint, request, jsonify
 
 auth_bp = Blueprint('auth', __name__)
 
-# Mock user data for demonstration purposes
 mock_user = {
     "email": "test@example.com",
     "password": "password123"
